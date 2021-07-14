@@ -339,3 +339,6 @@ sell_price = math.ceil(math.ceil(avg_buy_price * 1.005) / 1000) * 1000
 get_clf_eval(y_test, preds, pred_proba)
 get_clf_eval(y_test1, preds1, pred_proba1)
 print(now)
+print(up_yn)
+print(down_yn)
+print(current_price)
