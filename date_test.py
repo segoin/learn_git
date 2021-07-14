@@ -317,71 +317,23 @@ print("autotrade start")
 # 시작 메세지 슬랙 전송
 post_message(myToken,"#stock", "autotrade start")
 
-while True:
-    try:
-        now = datetime.datetime.now()
-        start_time = get_start_time("KRW-BTC")
-        end_time_model = start_time + datetime.timedelta(seconds=10)
-        end_time = start_time + datetime.timedelta(minutes=20)
-        end_time2 = start_time + datetime.timedelta(minutes=29) + datetime.timedelta(seconds=55)
-        BTC = get_balance("BTC")
 
-        #예측 성능 평가
-        # get_clf_eval(y_test,preds,pred_proba)
+now = datetime.datetime.now()
+start_time = get_start_time("KRW-BTC")
+end_time_model = start_time + datetime.timedelta(seconds=10)
+end_time = start_time + datetime.timedelta(minutes=20)
+end_time2 = start_time + datetime.timedelta(minutes=29) + datetime.timedelta(seconds=55)
+BTC = get_balance("BTC")
 
-        # 모델 수행시간 - 정시부터 1분내.
-        if start_time < now < end_time_model:
-            up_yn, X_train, y_test, preds, pred_proba, down_yn, y_test1, preds1, pred_proba1 = Light_GBM("KRW-BTC")
-            post_message(myToken,"#stock", "model_result : " +str(up_yn)+str(down_yn))
-            post_message(myToken,"#stock", "model_time : " +str(now))
-        # 매수 수행시간 - 정시부터 30분내.
-        if end_time_model < now < end_time:
-            target_price = get_target_price("KRW-BTC")
-            current_price = get_current_price("KRW-BTC")
-            low_price = get_low_price("KRW-BTC")
-            krw = get_balance("KRW")
-            order_cnt = round(krw / target_price, 7) 
-#            if krw > 5000 and target_price > current_price and up_yn == 1 and down_yn == 0 and low_price > target_price * 0.99:
-            if krw > 5000 and up_yn == 1 and down_yn == 0 and low_price > target_price * 0.99:
-#                buy_result = upbit.buy_market_order("KRW-ETH", krw*0.9995)
-                buy_price = math.floor(math.floor(target_price) / 1000) * 1000
-                buy_result = upbit.buy_limit_order("KRW-BTC", buy_price, round(order_cnt*0.999,6))
-                post_message(myToken,"#stock", "BTC buy : " +str(buy_result))
-        # 매도 수행시간 - 코인 개수가 10이상일 경우
-        if end_time2 < now:
-            krw = get_balance("KRW")
-            if krw > 1000000:
-                earnings_rate = round(100 * (krw - 1973212) / 1973212,2)
-                post_message(myToken,"#stock", "Earning rate : " +str(earnings_rate)+"%")
-        if BTC > 0.01:
-            avg_buy_price = upbit.get_avg_buy_price("BTC")
-            current_price = get_current_price("KRW-BTC")
-            sell_price = math.ceil(math.ceil(avg_buy_price * 1.005) / 1000) * 1000
-#            if avg_buy_price > 0 and current_price > avg_buy_price * 1.0055:
-            if avg_buy_price > 0:
-#                sell_result = upbit.sell_market_order("KRW-BTC", BTC*0.9995)
-                sell_result = upbit.sell_limit_order("KRW-BTC", sell_price, BTC*0.9995)
-                post_message(myToken,"#stock", "BTC sell : " +str(sell_result))
-            if avg_buy_price > 0 and current_price < avg_buy_price * 0.99:
-#                sell_result = upbit.sell_market_order("KRW-BTC", BTC*0.9995)
-                uuid = sell_result['uuid'] # 주문번호 얻기
-                upbit.cancel_order(uuid) # 주문 취소
-#                sell_result_loss = upbit.sell_market_order("KRW-BTC", BTC*0.9995)
-                sell_result_loss = upbit.sell_limit_order("KRW-BTC", current_price, BTC*0.9995)
-                post_message(myToken,"#stock", "BTC sell : " +str(sell_result_loss))
-            if avg_buy_price > 0 and up_yn == 0 and down_yn == 1:
-#                sell_result = upbit.sell_market_order("KRW-BTC", BTC*0.9995)
-                uuid = sell_result['uuid'] # 주문번호 얻기
-                sell_result_exp = upbit.sell_limit_order("KRW-BTC", current_price, BTC*0.9995)
-                post_message(myToken,"#stock", "BTC sell : " +str(sell_result_exp))
-            # if end_time1 < now < end_time2 and BTC > 0.003:
-            #     sell_result = upbit.sell_limit_order("KRW-ETH", current_price, BTC*0.9995)
-            #     post_message(myToken,"#stock", "ETH buy : " +str(sell_result))
-            #     time.sleep(1)
-        time.sleep(1)
-    except Exception as e:
-        print(e)
-        post_message(myToken,"#stock", e)
-        time.sleep(1)
+up_yn, X_train, y_test, preds, pred_proba, down_yn, y_test1, preds1, pred_proba1 = Light_GBM("KRW-BTC")
 
+target_price = get_target_price("KRW-BTC")
+current_price = get_current_price("KRW-BTC")
+low_price = get_low_price("KRW-BTC")
+krw = get_balance("KRW")
+order_cnt = round(krw / target_price, 7) 
+avg_buy_price = upbit.get_avg_buy_price("BTC")
+buy_price = math.floor(math.floor(target_price) / 1000) * 1000
+sell_price = math.ceil(math.ceil(avg_buy_price * 1.005) / 1000) * 1000
 
+get_clf_eval(y_test, pred, pred_proba)
