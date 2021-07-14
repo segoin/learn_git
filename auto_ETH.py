@@ -12,7 +12,7 @@ import math
 
 access = "ccyUip4ujykayb5qFP9xkncrbbt9HPM98vtVQeqV"
 secret = "x3fUq5n4MMHDyKDKeNZdVOcoMjiWQqB0pBBErDjn"
-myToken = "xoxb-1702501177444-1689568357894-eTntzP8uGJlB0sDjbpfDP5mK"
+myToken = "xoxb-1702501177444-1689568357894-F4mQeDhSY9T4Qv10saxOi6Mp"
 
 def post_message(token, channel, text):
     """슬랙 메시지 전송"""
@@ -22,7 +22,7 @@ def post_message(token, channel, text):
     )
     
 def post_message1(channel, text): 
-    SLACK_BOT_TOKEN = "xoxb-1702501177444-1689568357894-eTntzP8uGJlB0sDjbpfDP5mK"
+    SLACK_BOT_TOKEN = "xoxb-1702501177444-1689568357894-F4mQeDhSY9T4Qv10saxOi6Mp"
     headers = {
         'Content-Type': 'application/json', 
         'Authorization': 'Bearer ' + SLACK_BOT_TOKEN
