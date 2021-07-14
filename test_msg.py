@@ -1,6 +1,7 @@
+import requests 
+def send_message_to_slack(text): 
+    url = "https://hooks.slack.com/services/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" 
+    payload = { "text" : text } 
+    requests.post(url, json=payload)
 
-from slack_sdk import WebClient
-
-myToken = "xoxb-1702501177444-1689568357894-oVvUyKlVTQhKJAqHaWmzxj9x"
-slack = WebClient(myToken)
-slack.chat_postMessage(channel = "#stock", text = "aws test")
+send_message_to_slack("AWS Send Message Using Python")
