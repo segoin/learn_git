@@ -19,6 +19,7 @@ def post_message(token, channel, text):
         headers={"Authorization": "Bearer "+token},
         data={"channel": channel,"text": text}
     )
-    
+
+print("autotrade start")
 post_message(myToken,"#stock", "autotrade start")
 
